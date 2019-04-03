@@ -65,16 +65,16 @@ public class ListaValoraciones {
 	      return datos;
 		}
 	
-	public void annadirValoracion(int pIdUsuario, Valoracion v) {
-		if (!lValoraciones.containsKey(pIdUsuario)) {
+	public void annadirValoracion(int pIdPeli, Valoracion v) {
+		if (!lValoraciones.containsKey(pIdPeli)) {
 			ArrayList<Valoracion> lv = new ArrayList<Valoracion>();
 			lv.add(v);
-			lValoraciones.put(pIdUsuario,lv);
+			lValoraciones.put(pIdPeli,lv);
 		}
 		else {
-			ArrayList<Valoracion> lv = lValoraciones.get(pIdUsuario);
+			ArrayList<Valoracion> lv = lValoraciones.get(pIdPeli);
 			lv.add(v);
-			lValoraciones.replace(pIdUsuario, lv);
+			lValoraciones.replace(pIdPeli, lv);
 		}
 	}
 	
