@@ -53,7 +53,7 @@ public class ListaValoraciones {
 	          double nota= Double.parseDouble(notaString);
 	          
 	          Valoracion unaValoracion = new Valoracion(idP,nota);
-	          miListaValoraciones.getListaValoraciones().añadirValoracion(idU, unaValoracion);
+	          miListaValoraciones.getListaValoraciones().annadirValoracion(idU, unaValoracion);
 	          //System.out.println(idU + " " + idP + " " + nota);
 	          cont++;
 	      }
@@ -65,7 +65,7 @@ public class ListaValoraciones {
 	      return datos;
 		}
 	
-	public void añadirValoracion(int pIdUsuario, Valoracion v) {
+	public void annadirValoracion(int pIdUsuario, Valoracion v) {
 		if (!lValoraciones.containsKey(pIdUsuario)) {
 			ArrayList<Valoracion> lv = new ArrayList<Valoracion>();
 			lv.add(v);
