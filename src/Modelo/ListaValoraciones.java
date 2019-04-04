@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class ListaValoraciones {
 
@@ -93,4 +94,82 @@ public class ListaValoraciones {
 			e.printStackTrace();
 		}
 	}*/
+	
+	public ArrayList<Valoracion> obtenerListaValoraciones(int idPeli){
+		
+		ArrayList<Valoracion> lista=lValoraciones.get(idPeli);
+		return lista;
+		
+	}
+	
+	public void obtener35Correlaciones(int idPeli) {
+		HashMap<Integer, String> correlaciones=new HashMap<Integer, String>();
+		HashMap<Integer, String> lPelis=ListaPeliculas.getListaPeliculas().obtenerPelis();
+		for (Entry<Integer, String> entry : lPelis.entrySet()) {
+			int idPeli2=entry.getKey();
+			if(idPeli!=idPeli2) {
+				while (correlaciones.size()!=35) {
+					double correlacion=calcularCorrelacion(idPeli, idPeli2);
+					double correlacionTrans=transformarCorrelacion(correlacion);
+					String sCo=Double.toString(correlacionTrans);
+					correlaciones.put(idPeli2, sCo);
+				}
+				
+			}
+			
+			
+	
+		}
+	}
+	
+	public double transformarCorrelacion(double pCo) {
+		double res=pCo;
+		
+		if(res>0) {
+			res=1-res;
+		}
+		else {
+			res=res+1;
+		}
+		return res;
+	}
+	
+	public double calcularCorrelacion(int idPeli1,int idPeli2) {
+		
+		
+		ArrayList<Valoracion> lista1=this.obtenerListaValoraciones(idPeli1);
+		ArrayList<Valoracion> lista2=this.obtenerListaValoraciones(idPeli2);
+		
+		double sx = 0.0;
+	    double sy = 0.0;
+	    double sxx = 0.0;
+	    double syy = 0.0;
+	    double sxy = 0.0;
+
+	    int n = lista1.size();
+
+	    for(int i = 0; i < n; i++) {
+	      double x = lista1.get(i).getNota();
+	      double y = lista2.get(i).getNota();
+
+	      sx += x;
+	      sy += y;
+	      sxx += x * x;
+	      syy += y * y;
+	      sxy += x * y;
+	    }
+
+	    // covariation
+	    double cov = sxy / n - sx * sy / n / n;
+	    // standard error of x
+	    double sigmax = Math.sqrt(sxx / n -  sx * sx / n / n);
+	    // standard error of y
+	    double sigmay = Math.sqrt(syy / n -  sy * sy / n / n);
+
+	    // correlation is just a normalized covariation
+	    return cov / sigmax / sigmay;
+		
+
+	}
+
 }
