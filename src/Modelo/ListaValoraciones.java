@@ -86,8 +86,8 @@ public class ListaValoraciones {
 		return this.lValoraciones;
 	}
 	
-	public static void main(String[] args){
-		/*try {
+	/*public static void main(String[] args){
+		try {
 			cargarDatosValoracion("C:\\Users\\borja\\Desktop\\Borja cosas\\Uni\\Tercero culo\\IS\\movie-ratings.csv");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -95,8 +95,8 @@ public class ListaValoraciones {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
-	}
+		}
+	}*/
 	
 	public ArrayList<Valoracion> obtenerListaValoraciones(int idPeli){
 		
@@ -105,7 +105,28 @@ public class ListaValoraciones {
 		
 	}
 	
-	public ArrayList<Double> obtener35Correlaciones(int idPeli) {
+	public double estimarValoracion(int idPeli, int idUsu) {
+		
+		HashMap<Integer, Double> correlaciones=this.obtener35Correlaciones(idPeli);
+		double suma1=0.00;
+		double suma2=0.00;
+		for (Entry<Integer, Double> entry : correlaciones.entrySet()) {
+			double valoracion=this.obtenerValoracionPersona(entry.getKey(), idUsu);
+			suma1=suma1+(valoracion*entry.getValue());
+			suma2=suma2+entry.getValue();
+		}
+		
+		return suma1/suma2;
+		
+	}
+	
+	//Implementar
+	public double obtenerValoracionPersona(int pIdPeli, int pIdUsu) {
+		double result=0.00;
+		return result;
+	}
+	
+	public HashMap<Integer, Double> obtener35Correlaciones(int idPeli) {
 		
 		HashMap<Integer, Double> correlaciones=new HashMap<Integer, Double>();
 		HashMap<Integer, String> lPelis=ListaPeliculas.getListaPeliculas().obtenerPelis();
@@ -119,26 +140,59 @@ public class ListaValoraciones {
 		}
 		
 		HashMap<Integer,Double> aux = (HashMap<Integer, Double>) correlaciones.clone();
-		ArrayList<Double> l=new ArrayList<Double>();
+		HashMap<Integer, Double> mayores=new HashMap<Integer, Double>();
 		boolean lleno=false;
 	
 		while (!lleno){
 		
-        double maxValueInMap=(Collections.max(correlaciones.values()));  // This will return max value in the Hashmap
+			double maxValueInMap=(Collections.max(correlaciones.values()));  // This will return max value in the Hashmap
         
         	for(Iterator<Map.Entry<Integer,Double>> it = aux.entrySet().iterator();it.hasNext();){
         		Map.Entry<Integer, Double> entry = it.next();
         		if (entry.getValue()==maxValueInMap) {
-        			if (l.size()<35){
-        				l.add(entry.getValue());
+        			if (mayores.size()<35){
+        				mayores.put(entry.getKey(), entry.getValue());
             			it.remove();
-        			}else{
+        			}
+        			else{
         				lleno=true;
         			}	
         		}
         	}	
-        }	   
+        }
+		
+		return mayores;
 	}
+	
+	/*public HashMap<Integer, Double> obtener35Correlaciones(int idPeli) {
+		HashMap<Integer, Double> correlaciones=new HashMap<Integer, Double>();
+		HashMap<Integer, String> lPelis=ListaPeliculas.getListaPeliculas().obtenerPelis();
+		for (Entry<Integer, String> entry : lPelis.entrySet()) {
+			int idPeli2=entry.getKey();
+			if(idPeli!=idPeli2) {
+				double correlacion=calcularCorrelacion(idPeli, idPeli2);
+				double coTrans=transformarCorrelacion(correlacion);	
+				correlaciones.put(idPeli2, coTrans);
+			}
+		}
+		HashMap<Integer, Double> mayores=new HashMap<Integer, Double>();
+		Double max=0.00;
+		int key=-1;
+		HashMap<Integer, Double> aux=correlaciones;
+		while(mayores.size()!=35) {
+			correlaciones=aux;
+			for (Entry<Integer, Double> entry : correlaciones.entrySet()) {
+				if(entry.getValue()>=max) {
+					max=entry.getValue();
+					key=entry.getKey();
+				}	
+			}
+			mayores.put(key, max);
+			aux.remove(key);
+		}
+		return mayores;
+		
+	}*/
 	
 	public double transformarCorrelacion(double pCo) {
 		double res=pCo;
