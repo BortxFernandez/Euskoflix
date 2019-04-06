@@ -5,7 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 
 public class ListaValoraciones {
@@ -83,8 +86,8 @@ public class ListaValoraciones {
 		return this.lValoraciones;
 	}
 	
-	/*public static void main(String[] args){
-		try {
+	public static void main(String[] args){
+		/*try {
 			cargarDatosValoracion("C:\\Users\\borja\\Desktop\\Borja cosas\\Uni\\Tercero culo\\IS\\movie-ratings.csv");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -92,8 +95,8 @@ public class ListaValoraciones {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-	}*/
+		}*/
+	}
 	
 	public ArrayList<Valoracion> obtenerListaValoraciones(int idPeli){
 		
@@ -102,24 +105,39 @@ public class ListaValoraciones {
 		
 	}
 	
-	public void obtener35Correlaciones(int idPeli) {
-		HashMap<Integer, String> correlaciones=new HashMap<Integer, String>();
+	public ArrayList<Double> obtener35Correlaciones(int idPeli) {
+		
+		HashMap<Integer, Double> correlaciones=new HashMap<Integer, Double>();
 		HashMap<Integer, String> lPelis=ListaPeliculas.getListaPeliculas().obtenerPelis();
 		for (Entry<Integer, String> entry : lPelis.entrySet()) {
 			int idPeli2=entry.getKey();
 			if(idPeli!=idPeli2) {
-				while (correlaciones.size()!=35) {
 					double correlacion=calcularCorrelacion(idPeli, idPeli2);
 					double correlacionTrans=transformarCorrelacion(correlacion);
-					String sCo=Double.toString(correlacionTrans);
-					correlaciones.put(idPeli2, sCo);
-				}
-				
+					correlaciones.put(idPeli2, correlacionTrans);	
 			}
-			
-			
-	
 		}
+		
+		HashMap<Integer,Double> aux = (HashMap<Integer, Double>) correlaciones.clone();
+		ArrayList<Double> l=new ArrayList<Double>();
+		boolean lleno=false;
+	
+		while (!lleno){
+		
+        double maxValueInMap=(Collections.max(correlaciones.values()));  // This will return max value in the Hashmap
+        
+        	for(Iterator<Map.Entry<Integer,Double>> it = aux.entrySet().iterator();it.hasNext();){
+        		Map.Entry<Integer, Double> entry = it.next();
+        		if (entry.getValue()==maxValueInMap) {
+        			if (l.size()<35){
+        				l.add(entry.getValue());
+            			it.remove();
+        			}else{
+        				lleno=true;
+        			}	
+        		}
+        	}	
+        }	   
 	}
 	
 	public double transformarCorrelacion(double pCo) {
