@@ -25,7 +25,8 @@ public class Euskoflix {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		ListaValoraciones.getListaValoraciones().estimarValoracion(idPeli, idUsu);
+		double res=ListaValoraciones.getListaValoraciones().estimarValoracion(idPeli, idUsu);
+		System.out.println(res);
     }
 
 }
