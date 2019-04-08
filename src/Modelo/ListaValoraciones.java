@@ -123,6 +123,17 @@ public class ListaValoraciones {
 	//Implementar
 	public double obtenerValoracionPersona(int pIdPeli, int pIdUsu) {
 		double result=0.00;
+		if(lValoraciones.containsKey(pIdPeli)) {
+			ArrayList<Valoracion> lista= this.obtenerListaValoraciones(pIdPeli);
+			int i=0;
+			while(i<lista.size()) {
+				if(lista.get(i).getId()==pIdUsu) {
+					result=lista.get(i).getNota();
+				}
+				i++;
+			}
+		}
+		
 		return result;
 	}
 	
@@ -132,9 +143,10 @@ public class ListaValoraciones {
 		HashMap<Integer, String> lPelis=ListaPeliculas.getListaPeliculas().obtenerPelis();
 		for (Entry<Integer, String> entry : lPelis.entrySet()) {
 			int idPeli2=entry.getKey();
-			if(idPeli!=idPeli2) {
+			if(idPeli!=idPeli2 && lValoraciones.containsKey(idPeli2)) {
 					double correlacion=calcularCorrelacion(idPeli, idPeli2);
 					double correlacionTrans=transformarCorrelacion(correlacion);
+					System.out.println(correlacionTrans);
 					correlaciones.put(idPeli2, correlacionTrans);	
 			}
 		}
@@ -212,24 +224,57 @@ public class ListaValoraciones {
 		ArrayList<Valoracion> lista1=this.obtenerListaValoraciones(idPeli1);
 		ArrayList<Valoracion> lista2=this.obtenerListaValoraciones(idPeli2);
 		
+		
+		double x=0.00;
+		double y=0.00;
 		double sx = 0.0;
 	    double sy = 0.0;
 	    double sxx = 0.0;
 	    double syy = 0.0;
 	    double sxy = 0.0;
-
-	    int n = lista1.size();
-
-	    for(int i = 0; i < n; i++) {
-	      double x = lista1.get(i).getNota();
-	      double y = lista2.get(i).getNota();
-
-	      sx += x;
-	      sy += y;
-	      sxx += x * x;
-	      syy += y * y;
-	      sxy += x * y;
-	    }
+	    
+		for (int i=0; i<lista1.size()-1; i++){
+			int k=0;
+			ArrayList<Valoracion> lista3=(ArrayList<Valoracion>) lista2.clone();
+			boolean acabado=false;
+			while(!acabado && k<lista3.size()) {
+				if(lista1.get(i).getId()==lista3.get(k).getId()) {
+					y = lista2.get(k).getNota();
+					lista2.remove(k);
+					acabado=true;
+				}
+				else {
+					k++;
+				}	
+			}
+			if(!acabado) {
+				
+				y=0.00;
+			}
+			x = lista1.get(i).getNota();
+			
+			sx += x;
+		    sy += y;
+		    sxx += x * x;
+		    syy += y * y;
+		    sxy += x * y;
+		    
+		    System.out.println(sx);
+		}
+		
+		for(int j=0; j<lista2.size()-1;j++) {
+			y=lista2.get(j).getNota();
+			x=0.00;
+			sx += x;
+		    sy += y;
+		    sxx += x * x;
+		    syy += y * y;
+		    sxy += x * y;
+		    
+		    System.out.println(sy);
+			
+		}
+		int n=lista1.size() + lista2.size();
 
 	    // covariation
 	    double cov = sxy / n - sx * sy / n / n;
@@ -238,10 +283,11 @@ public class ListaValoraciones {
 	    // standard error of y
 	    double sigmay = Math.sqrt(syy / n -  sy * sy / n / n);
 
+	    
 	    // correlation is just a normalized covariation
 	    return cov / sigmax / sigmay;
-		
-
 	}
+	
+
 
 }
