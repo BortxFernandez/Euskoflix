@@ -25,8 +25,10 @@ public class Euskoflix {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Datos cargados");
 		double res=ListaValoraciones.getListaValoraciones().estimarValoracion(idPeli, idUsu);
-		System.out.println(res);
+		System.out.println("La valoracion que el usuario " + idUsu + " le daría a la película " + ListaPeliculas.getListaPeliculas().getNombre(idPeli) + " es " + res);
+		
     }
 
 }

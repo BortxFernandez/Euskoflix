@@ -87,6 +87,10 @@ public class ListaPeliculas {
 		
 		return lPelis.get(pId);
 	}
+
+	public HashMap<Integer, String> obtenerPelis() {
+		return this.lPelis;
+	}
 	
 	/*public static void main(String[] args) throws FileNotFoundException, IOException {
 		
@@ -95,6 +99,7 @@ public class ListaPeliculas {
 	}
 	*/
 	
+
 	
 }
     

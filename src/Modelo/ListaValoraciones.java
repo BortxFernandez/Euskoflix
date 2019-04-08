@@ -146,7 +146,7 @@ public class ListaValoraciones {
 			if(idPeli!=idPeli2 && lValoraciones.containsKey(idPeli2)) {
 					double correlacion=calcularCorrelacion(idPeli, idPeli2);
 					double correlacionTrans=transformarCorrelacion(correlacion);
-					System.out.println(correlacionTrans);
+					//System.out.println(correlacionTrans);
 					correlaciones.put(idPeli2, correlacionTrans);	
 			}
 		}
@@ -157,13 +157,14 @@ public class ListaValoraciones {
 	
 		while (!lleno){
 		
-			double maxValueInMap=(Collections.max(correlaciones.values()));  // This will return max value in the Hashmap
+			double maxValueInMap=(Collections.max(aux.values()));  // This will return max value in the Hashmap
         
         	for(Iterator<Map.Entry<Integer,Double>> it = aux.entrySet().iterator();it.hasNext();){
         		Map.Entry<Integer, Double> entry = it.next();
         		if (entry.getValue()==maxValueInMap) {
         			if (mayores.size()<35){
         				mayores.put(entry.getKey(), entry.getValue());
+        				//System.out.println(entry.getValue());
             			it.remove();
         			}
         			else{
@@ -259,7 +260,7 @@ public class ListaValoraciones {
 		    syy += y * y;
 		    sxy += x * y;
 		    
-		    System.out.println(sx);
+		    
 		}
 		
 		for(int j=0; j<lista2.size()-1;j++) {
@@ -271,7 +272,7 @@ public class ListaValoraciones {
 		    syy += y * y;
 		    sxy += x * y;
 		    
-		    System.out.println(sy);
+		    
 			
 		}
 		int n=lista1.size() + lista2.size();
