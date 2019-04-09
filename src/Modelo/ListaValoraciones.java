@@ -56,8 +56,8 @@ public class ListaValoraciones {
 	          String notaString=cadena.substring(i);
 	          double nota= Double.parseDouble(notaString);
 	          
-	          Valoracion unaValoracion = new Valoracion(idP,nota);
-	          miListaValoraciones.getListaValoraciones().annadirValoracion(idU, unaValoracion);
+	          Valoracion unaValoracion = new Valoracion(idU,nota);
+	          miListaValoraciones.getListaValoraciones().annadirValoracion(idP, unaValoracion);
 	          //System.out.println(idU + " " + idP + " " + nota);
 	          cont++;
 	      }
@@ -77,8 +77,10 @@ public class ListaValoraciones {
 		}
 		else {
 			ArrayList<Valoracion> lv = lValoraciones.get(pIdPeli);
+			lValoraciones.remove(pIdPeli, lv);
 			lv.add(v);
-			lValoraciones.replace(pIdPeli, lv);
+			lValoraciones.put(pIdPeli, lv);
+			
 		}
 	}
 	
@@ -126,13 +128,17 @@ public class ListaValoraciones {
 		if(lValoraciones.containsKey(pIdPeli)) {
 			ArrayList<Valoracion> lista= this.obtenerListaValoraciones(pIdPeli);
 			int i=0;
-			while(i<lista.size()) {
+			boolean encontrado=false;
+			while(i<lista.size() && !encontrado) {
+				System.out.println(lista.get(i).getId());
 				if(lista.get(i).getId()==pIdUsu) {
 					result=lista.get(i).getNota();
+					
 				}
 				i++;
 			}
 		}
+		//System.out.println(result);
 		
 		return result;
 	}
@@ -147,14 +153,21 @@ public class ListaValoraciones {
 					double correlacion=calcularCorrelacion(idPeli, idPeli2);
 					double correlacionTrans=transformarCorrelacion(correlacion);
 					//System.out.println(correlacionTrans);
-					correlaciones.put(idPeli2, correlacionTrans);	
+					correlaciones.put(idPeli2, correlacionTrans);
+					
 			}
 		}
 		
 		HashMap<Integer,Double> aux = (HashMap<Integer, Double>) correlaciones.clone();
 		HashMap<Integer, Double> mayores=new HashMap<Integer, Double>();
 		boolean lleno=false;
-	
+		int limite=0;
+		if(aux.size()<36) {
+			limite=aux.size();
+		}
+		else {
+			limite=35;
+		}
 		while (!lleno){
 		
 			double maxValueInMap=(Collections.max(aux.values()));  // This will return max value in the Hashmap
@@ -162,7 +175,7 @@ public class ListaValoraciones {
         	for(Iterator<Map.Entry<Integer,Double>> it = aux.entrySet().iterator();it.hasNext();){
         		Map.Entry<Integer, Double> entry = it.next();
         		if (entry.getValue()==maxValueInMap) {
-        			if (mayores.size()<35){
+        			if (mayores.size()<limite){
         				mayores.put(entry.getKey(), entry.getValue());
         				//System.out.println(entry.getValue());
             			it.remove();
@@ -233,56 +246,63 @@ public class ListaValoraciones {
 	    double sxx = 0.0;
 	    double syy = 0.0;
 	    double sxy = 0.0;
+	    double cov=0.0;
+	    double sigmax=0.0;
+	    double sigmay=0.0;
 	    
-		for (int i=0; i<lista1.size()-1; i++){
-			int k=0;
-			ArrayList<Valoracion> lista3=(ArrayList<Valoracion>) lista2.clone();
-			boolean acabado=false;
-			while(!acabado && k<lista3.size()) {
-				if(lista1.get(i).getId()==lista3.get(k).getId()) {
-					y = lista2.get(k).getNota();
-					lista2.remove(k);
-					acabado=true;
+	    if(lista1!=null && lista2!=null) {
+			for (int i=0; i<lista1.size(); i++){
+				int k=0;
+				ArrayList<Valoracion> lista3=(ArrayList<Valoracion>) lista2.clone();
+				boolean acabado=false;
+				while(!acabado && k<lista3.size()) {
+					if(lista1.get(i).getId()==lista3.get(k).getId()) {
+						y = lista3.get(k).getNota();
+						lista2.remove(k);
+						acabado=true;
+					}
+					else {
+						k++;
+					}	
 				}
-				else {
-					k++;
-				}	
-			}
-			if(!acabado) {
+				if(!acabado) {
+					
+					y=0.00;
+				}
+				x = lista1.get(i).getNota();
 				
-				y=0.00;
+				sx += x;
+			    sy += y;
+			    sxx += x * x;
+			    syy += y * y;
+			    sxy += x * y;
+			    
+			    
 			}
-			x = lista1.get(i).getNota();
-			
-			sx += x;
-		    sy += y;
-		    sxx += x * x;
-		    syy += y * y;
-		    sxy += x * y;
-		    
-		    
-		}
+			for(int j=0; j<lista2.size()-1;j++) {
+				y=lista2.get(j).getNota();
+				x=0.00;
+				sx += x;
+			    sy += y;
+			    sxx += x * x;
+			    syy += y * y;
+			    sxy += x * y;
+			    
+			    
+				
+			}
+			int n=lista1.size() + lista2.size();
+			// covariation
+			cov = sxy / n - sx * sy / n / n;
+		    // standard error of x
+		    sigmax = Math.sqrt(sxx / n -  sx * sx / n / n);
+		    // standard error of y
+		    sigmay = Math.sqrt(syy / n -  sy * sy / n / n);
+	    }	
 		
-		for(int j=0; j<lista2.size()-1;j++) {
-			y=lista2.get(j).getNota();
-			x=0.00;
-			sx += x;
-		    sy += y;
-		    sxx += x * x;
-		    syy += y * y;
-		    sxy += x * y;
-		    
-		    
-			
-		}
-		int n=lista1.size() + lista2.size();
 
-	    // covariation
-	    double cov = sxy / n - sx * sy / n / n;
-	    // standard error of x
-	    double sigmax = Math.sqrt(sxx / n -  sx * sx / n / n);
-	    // standard error of y
-	    double sigmay = Math.sqrt(syy / n -  sy * sy / n / n);
+	    
+	    
 
 	    
 	    // correlation is just a normalized covariation

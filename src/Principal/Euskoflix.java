@@ -15,8 +15,8 @@ public class Euskoflix {
         //controlador.iniciarAplicacion();
 		
 		//Poner id de peli y usuario a estimar
-		int idPeli=114;
-		int idUsu=1;
+		int idPeli=161;
+		int idUsu=2048;
 		
 		try {
 			ArrayList<String> datosPelis=ListaPeliculas.getListaPeliculas().cargarDatosPelicula("C:\\Users\\mikel\\Desktop\\movie-titles.csv");
