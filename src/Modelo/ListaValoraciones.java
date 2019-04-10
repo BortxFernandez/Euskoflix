@@ -27,7 +27,7 @@ public class ListaValoraciones {
 		return miListaValoraciones;
 	}
 	
-	public static ArrayList<String> cargarDatosValoracion(String ruta) throws FileNotFoundException, IOException {
+	public  ArrayList<String> cargarDatosValoracion(String ruta) throws FileNotFoundException, IOException {
 	      String cadena;
 	      int cont=0;
 	      FileReader f = new FileReader(ruta);
@@ -57,11 +57,7 @@ public class ListaValoraciones {
 	          double nota= Double.parseDouble(notaString);
 	          
 	          Valoracion unaValoracion = new Valoracion(idU,nota);
-	          miListaValoraciones.getListaValoraciones().annadirValoracion(idP, unaValoracion);
-
-	          
-	          //System.out.println(idU + " " + idP + " " + nota);
-	          
+	          annadirValoracion(idP, unaValoracion);
 	          cont++;
 	      }
 	             
@@ -71,14 +67,14 @@ public class ListaValoraciones {
 	      return datos;
 		}
 	
-	public void annadirValoracion(int pIdPeli, Valoracion v) {
+	public  void annadirValoracion(int pIdPeli, Valoracion v) {
 		if (!lValoraciones.containsKey(pIdPeli)) {
 			ArrayList<Valoracion> lv = new ArrayList<Valoracion>();
 			lv.add(v);
 			lValoraciones.put(pIdPeli,lv);
 		}
 		else {
-			ArrayList<Valoracion> lv = lValoraciones.get(pIdPeli);
+			ArrayList<Valoracion> lv = (ArrayList<Valoracion>) lValoraciones.get(pIdPeli).clone();
 			lv.add(v);
 			lValoraciones.replace(pIdPeli, lv);
 			
@@ -101,12 +97,12 @@ public class ListaValoraciones {
 		}
 	}*/
 	
-	public ArrayList<Valoracion> obtenerListaValoraciones(int idPeli){
+	/*public ArrayList<Valoracion> obtenerListaValoraciones(int idPeli){
 		
 		ArrayList<Valoracion> lista=lValoraciones.get(idPeli);
 		return lista;
 		
-	}
+	}*/
 	
 	public double estimarValoracion(int idPeli, int idUsu) {
 		
@@ -115,6 +111,7 @@ public class ListaValoraciones {
 		double suma2=0.00;
 		for (Entry<Integer, Double> entry : correlaciones.entrySet()) {
 			double valoracion=this.obtenerValoracionPersona(entry.getKey(), idUsu);
+			//System.out.println(entry.getKey() + " " + idUsu);
 			//System.out.println(valoracion);
 			suma1=suma1+(valoracion*entry.getValue());
 			suma2=suma2+entry.getValue();
@@ -127,11 +124,15 @@ public class ListaValoraciones {
 	//Implementar
 	public double obtenerValoracionPersona(int pIdPeli, int pIdUsu) {
 		double result=0.00;
+		//System.out.println(pIdPeli);
 		if(lValoraciones.containsKey(pIdPeli)) {
-			ArrayList<Valoracion> lista= this.obtenerListaValoraciones(pIdPeli);
+			ArrayList<Valoracion> lista= lValoraciones.get(pIdPeli);
 			int i=0;
 			boolean encontrado=false;
 			while(i<lista.size() && !encontrado) {
+				/*if(pIdPeli==11) {
+					System.out.println(lista.get(i).getId());
+				}*/
 				//System.out.println(lista.get(i).getId());
 				//System.out.println(lista.get(i).getId()==pIdUsu);
 				if(lista.get(i).getId()==pIdUsu) {
@@ -208,14 +209,15 @@ public class ListaValoraciones {
 		else {
 			res=res+1;
 		}
+
 		return res;
 	}
 	
 	public double calcularCorrelacion(int idPeli1,int idPeli2) {
 		
 		
-		ArrayList<Valoracion> lista1=this.obtenerListaValoraciones(idPeli1);
-		ArrayList<Valoracion> lista2=this.obtenerListaValoraciones(idPeli2);
+		ArrayList<Valoracion> lista1=lValoraciones.get(idPeli1);
+		ArrayList<Valoracion> lista2=lValoraciones.get(idPeli2);
 		
 		
 		double x=0.00;
@@ -228,6 +230,7 @@ public class ListaValoraciones {
 	    double cov=0.0;
 	    double sigmax=0.0;
 	    double sigmay=0.0;
+	    //int n=0;
 	    
 	    
 	    if(lista1!=null && lista2!=null) {	
@@ -241,6 +244,8 @@ public class ListaValoraciones {
 						y = lista3.get(k).getNota();
 						lista2.remove(k);
 						acabado=true;
+						
+						
 					}
 					else {
 						k++;
@@ -257,6 +262,14 @@ public class ListaValoraciones {
 			    sxx += x * x;
 			    syy += y * y;
 			    sxy += x * y;
+				
+				
+				
+				/*if(acabado) {
+				
+					n++;
+				}*/
+				
 			    
 			    
 			}

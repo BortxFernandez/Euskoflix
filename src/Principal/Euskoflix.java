@@ -20,7 +20,7 @@ public class Euskoflix {
 		
 		try {
 			ArrayList<String> datosPelis=ListaPeliculas.getListaPeliculas().cargarDatosPelicula("C:\\Users\\mikel\\Desktop\\movie-titles.csv");
-			ArrayList<String> datosValoraciones=ListaValoraciones.cargarDatosValoracion("C:\\Users\\mikel\\Desktop\\movie-ratings.csv");
+			ArrayList<String> datosValoraciones=ListaValoraciones.getListaValoraciones().cargarDatosValoracion("C:\\Users\\mikel\\Desktop\\movie-ratings.csv");
 			ArrayList<String> datosTags=ListaTags.getListaTags().getListaTags().cargarDatosTags("C:\\Users\\mikel\\Desktop\\movie-tags.csv");
 		} catch (IOException e) {
 			e.printStackTrace();
