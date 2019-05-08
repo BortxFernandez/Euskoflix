@@ -11,11 +11,11 @@ import Modelo.ListaValoraciones;
 public class Euskoflix {
 	
 	public static void main(String[] args) {
-        //Controlador controlador = new Controlador();
-        //controlador.iniciarAplicacion();
+        Controlador controlador = new Controlador();
+        controlador.iniciarAplicacion();
 		
 		//Poner id de peli y usuario a estimar
-		int idPeli=161;
+		/*int idPeli=161;
 		int idUsu=2048;
 		
 		try {
@@ -28,7 +28,7 @@ public class Euskoflix {
 		System.out.println("Datos cargados");
 		double res=ListaValoraciones.getListaValoraciones().estimarValoracion(idPeli, idUsu);
 		System.out.println("La valoracion que el usuario " + idUsu + " le daría a la película " + ListaPeliculas.getListaPeliculas().getNombre(idPeli) + " es " + res);
-		
+		*/
     }
 
 }

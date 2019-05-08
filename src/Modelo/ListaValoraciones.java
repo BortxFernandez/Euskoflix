@@ -104,6 +104,67 @@ public class ListaValoraciones {
 		
 	}*/
 	
+	public ArrayList<String> obtener10Afines(int pIdUsu) {
+		
+
+		ArrayList<String> afines = new ArrayList<String>();
+		HashMap<Integer, String> lPelis = ListaPeliculas.getListaPeliculas().obtenerPelis();
+		for (Entry<Integer, String> entry : lPelis.entrySet()) {
+			int pActual = entry.getKey();
+			if(!visto(pIdUsu, pActual)) {
+				double val = this.estimarValoracion(pActual, pIdUsu);
+				
+			
+				HashMap<Integer, Double> todas=new HashMap<Integer, Double>();
+				boolean lleno=false;
+				int limite=0;
+				if(todas.size()<11) {
+					limite=todas.size();
+				}
+				else {
+					limite=10;
+				}
+				while (!lleno){
+				
+					double maxValueInMap=(Collections.max(todas.values()));  // This will return max value in the Hashmap
+		        
+		        	for(Iterator<Map.Entry<Integer,Double>> it = todas.entrySet().iterator();it.hasNext();){
+		        		Map.Entry<Integer, Double> entry2 = it.next();
+		        		if (entry2.getValue()==maxValueInMap) {
+		        			if (afines.size()<limite){
+		        				String nombre = ListaPeliculas.getListaPeliculas().getNombre(entry2.getKey());
+		        				afines.add(nombre);
+		        				//System.out.println(entry.getValue());
+		            			it.remove();
+		        			}
+		        			else{
+		        				lleno=true;
+		        			}	
+		        		}
+		        	}	
+		        }
+				
+			}
+		}
+		return afines;
+		
+	}
+	
+	private boolean visto(int pIdUsu, int pActual) {
+		
+		boolean visto=false;
+		int i = 0;
+		ArrayList<Valoracion> lista=lValoraciones.get(pActual);
+		while (i<lista.size() && !visto) {
+			if(lista.get(i).getId()== pIdUsu) {
+				visto=true;
+			}
+		}
+		return visto;
+		
+		
+	}
+	
 	public double estimarValoracion(int idPeli, int idUsu) {
 		
 		HashMap<Integer, Double> correlaciones=this.obtener35Correlaciones(idPeli);
@@ -296,10 +357,7 @@ public class ListaValoraciones {
 	      
 	}
 
-	public ArrayList<String> obtener10Afines(int pId) {
-		
-		return null;
-	}
+	
 	
 
 

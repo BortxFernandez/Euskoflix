@@ -12,5 +12,10 @@ public class Pelicula {
 		titulo=pTitulo;
 		año=pAño;
 	}
+	
+	public String getNombre(int pId) {
+		
+		return this.titulo;
+	}
 
 }
