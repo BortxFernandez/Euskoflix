@@ -13,6 +13,8 @@ import javax.swing.border.EmptyBorder;
 
 
 import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -20,6 +22,8 @@ public class VentanaPrincipal extends JFrame {
 	JButton btnVerPeliculas;
 	JButton btnVerValoraciones;
 	JButton btnVerTags;
+	JButton btnObtenerAfines;
+	private JTextField txtIntroduce;
 
 	/**
 	 * Launch the application.
@@ -53,12 +57,22 @@ public class VentanaPrincipal extends JFrame {
 		contentPane.add(btnVerPeliculas);
 		
 		btnVerValoraciones = new JButton("Ver valoraciones");
-		btnVerValoraciones.setBounds(47, 108, 165, 25);
+		btnVerValoraciones.setBounds(47, 76, 165, 25);
 		contentPane.add(btnVerValoraciones);
 		
 		btnVerTags = new JButton("Ver tags");
-		btnVerTags.setBounds(47, 187, 165, 25);
+		btnVerTags.setBounds(47, 114, 165, 25);
 		contentPane.add(btnVerTags);
+		
+		btnObtenerAfines = new JButton("Obtener afines");
+		btnObtenerAfines.setBounds(272, 196, 148, 25);
+		contentPane.add(btnObtenerAfines);
+		
+		txtIntroduce = new JTextField();
+		txtIntroduce.setText("Introduce un ID de usuario.");
+		txtIntroduce.setBounds(47, 197, 188, 22);
+		contentPane.add(txtIntroduce);
+		txtIntroduce.setColumns(10);
 	}
 	
 	//Listeners
@@ -75,7 +89,11 @@ public class VentanaPrincipal extends JFrame {
 	        btnVerTags.addActionListener(listenForBtnVerTags);
 	    }
 		
+		public void addObtenerAfinesListener(ActionListener listenForBtnObtenerAfines) {
+			btnObtenerAfines.addActionListener(listenForBtnObtenerAfines);
+		}
 		
-	
-		
+		public String getTxtIntroduce() {
+	        return this.txtIntroduce.getText();
+	    }
 }

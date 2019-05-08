@@ -295,6 +295,11 @@ public class ListaValoraciones {
 		return cov / sigmax / sigmay;
 	      
 	}
+
+	public ArrayList<String> obtener10Afines(int pId) {
+		
+		return null;
+	}
 	
 
 

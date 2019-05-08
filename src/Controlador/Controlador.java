@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import org.javatuples.Pair;
 
+import Vista.VentanaAfines;
 import Vista.VentanaPeliculasCargadas;
 import Vista.VentanaPrincipal;
 import Vista.VentanaTags;
@@ -31,6 +32,7 @@ public class Controlador {
 	private VentanaPeliculasCargadas ventanaPeliculasCargadas;
 	private VentanaTags ventanaTags;
 	private VentanaValoraciones ventanaValoraciones;
+	private VentanaAfines ventanaAfines;
 	
 	public Controlador() {
 		
@@ -42,12 +44,14 @@ public class Controlador {
 		this.ventanaPeliculasCargadas=new VentanaPeliculasCargadas();
 		this.ventanaTags=new VentanaTags();
 		this.ventanaValoraciones=new VentanaValoraciones();
+		this.ventanaAfines= new VentanaAfines();
 		
 		
 		//Añadir listeners a las ventanas
 		this.ventanaPrincipal.addVerPeliculasListener(new VerPeliculasListener());
 		this.ventanaPrincipal.addVerTagsListener(new VerTagsListener());
 		this.ventanaPrincipal.addVerValoracionesListener(new VerValoracionesListener());
+		this.ventanaPrincipal.addObtenerAfinesListener(new ObtenerAfinesListener());
 		
 	}
 	
@@ -90,6 +94,14 @@ public class Controlador {
 		this.ventanaValoraciones=new VentanaValoraciones();
 		this.ventanaValoraciones.añadirValoraciones(pDatos);
 		this.ventanaValoraciones.setVisible(true);
+	}
+	
+	public void mostrarVentanaAfines(ArrayList<String> pAfines) {
+		
+		this.ventanaAfines=new VentanaAfines();
+		this.ventanaAfines.añadirPeliculas(pAfines);
+		this.ventanaAfines.setVisible(true);
+		
 	}
 	
 	
@@ -148,6 +160,33 @@ public class Controlador {
 			
 		
 		}	
+	}
+	
+	class ObtenerAfinesListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			int id=Integer.parseInt(ventanaPrincipal.getTxtIntroduce());
+			String rutaPelis="C:\\Users\\mikel\\Desktop\\movie-titles.csv";
+			String rutaValoraciones="C:\\Users\\mikel\\Desktop\\movie-ratings.csv";
+			
+			
+			try {
+				ArrayList<String> datosPelis = ListaPeliculas.getListaPeliculas().cargarDatosPelicula(rutaPelis);
+				ArrayList<String> datosVal = ListaValoraciones.getListaValoraciones().cargarDatosValoracion(rutaValoraciones);
+				ArrayList<String> afines = ListaValoraciones.getListaValoraciones().obtener10Afines(id);
+				mostrarVentanaAfines(afines);
+				
+				
+				
+			} catch (IOException e1) {
+				//System.out.println("No se han podido cargar los Tags");
+				e1.printStackTrace();
+			}
+			
+			
+			
+		}
 	}
 	
 	
