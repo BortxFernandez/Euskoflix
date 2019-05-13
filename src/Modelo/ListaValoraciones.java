@@ -117,8 +117,8 @@ public class ListaValoraciones {
 			pActual = entry.getKey();
 			//System.out.println(pActual);
 			if(!visto(pIdUsu, pActual)) {
+				System.out.println(pActual);
 				val = this.estimarValoracion(pActual, pIdUsu);
-				//System.out.println(pActual);
 				System.out.println(val);
 				todas.put(pActual, val);
 				
@@ -147,7 +147,7 @@ public class ListaValoraciones {
 		    for(Iterator<Map.Entry<Integer,Double>> it = aux.entrySet().iterator();it.hasNext();){
 		    	Map.Entry<Integer, Double> entry2 = it.next();
 		        if (entry2.getValue()==maxValueInMap) {
-		        		if (afines.size() <= limite){
+		        		if (afines.size() < limite){
 		        			nombre = ListaPeliculas.getListaPeliculas().getNombre(entry2.getKey());
 		        			afines.add(nombre);
 		        			//System.out.println(nombre);
@@ -365,16 +365,23 @@ public class ListaValoraciones {
 			    sxy += x * y;		
 			}
 			int n=lista1.size() + lista2.size();
+			if(n!=0) {
+				// covariation
+				cov = sxy / n - sx * sy / n / n;
+				// standard error of x
+				sigmax = Math.sqrt(sxx / n -  sx * sx / n / n);
+				// standard error of y
+				sigmay = Math.sqrt(syy / n -  sy * sy / n / n);
+			}
 			
-			// covariation
-			cov = sxy / n - sx * sy / n / n;
-			// standard error of x
-			sigmax = Math.sqrt(sxx / n -  sx * sx / n / n);
-			// standard error of y
-			sigmay = Math.sqrt(syy / n -  sy * sy / n / n);
 	    }	
 		// correlation is just a normalized covariation
-		return cov / sigmax / sigmay;
+	    double result=0.00;
+	    if(sigmax!=0 && sigmay!=0) {
+	    	result = cov / sigmax / sigmay;
+	    }
+	    //System.out.println(result);
+	    return result;
 	      
 	}
 
