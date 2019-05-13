@@ -109,43 +109,58 @@ public class ListaValoraciones {
 
 		ArrayList<String> afines = new ArrayList<String>();
 		HashMap<Integer, String> lPelis = ListaPeliculas.getListaPeliculas().obtenerPelis();
+		HashMap<Integer, Double> todas=new HashMap<Integer, Double>();
+		int pActual;
+		double val;
+		int cont=0;
 		for (Entry<Integer, String> entry : lPelis.entrySet()) {
-			int pActual = entry.getKey();
+			pActual = entry.getKey();
+			//System.out.println(pActual);
 			if(!visto(pIdUsu, pActual)) {
-				double val = this.estimarValoracion(pActual, pIdUsu);
-				
-			
-				HashMap<Integer, Double> todas=new HashMap<Integer, Double>();
-				boolean lleno=false;
-				int limite=0;
-				if(todas.size()<11) {
-					limite=todas.size();
-				}
-				else {
-					limite=10;
-				}
-				while (!lleno){
-				
-					double maxValueInMap=(Collections.max(todas.values()));  // This will return max value in the Hashmap
-		        
-		        	for(Iterator<Map.Entry<Integer,Double>> it = todas.entrySet().iterator();it.hasNext();){
-		        		Map.Entry<Integer, Double> entry2 = it.next();
-		        		if (entry2.getValue()==maxValueInMap) {
-		        			if (afines.size()<limite){
-		        				String nombre = ListaPeliculas.getListaPeliculas().getNombre(entry2.getKey());
-		        				afines.add(nombre);
-		        				//System.out.println(entry.getValue());
-		            			it.remove();
-		        			}
-		        			else{
-		        				lleno=true;
-		        			}	
-		        		}
-		        	}	
-		        }
+				val = this.estimarValoracion(pActual, pIdUsu);
+				//System.out.println(pActual);
+				System.out.println(val);
+				todas.put(pActual, val);
 				
 			}
+			cont++;
+			System.out.println("cont= " + cont);
 		}
+		
+		int limite=0;
+		int cuantos=todas.size();
+		if(cuantos<10) {
+			limite=cuantos;
+		}
+		else {
+			limite=10;
+		}
+		boolean lleno=false;
+		//System.out.println(limite); 
+		HashMap<Integer, Double> aux = (HashMap<Integer, Double>) todas.clone();
+		double maxValueInMap;
+		String nombre;
+		while (!lleno && !aux.isEmpty()){
+				
+			maxValueInMap=(Collections.max(aux.values()));  // This will return max value in the Hashmap
+			//System.out.println(maxValueInMap); 
+		    for(Iterator<Map.Entry<Integer,Double>> it = aux.entrySet().iterator();it.hasNext();){
+		    	Map.Entry<Integer, Double> entry2 = it.next();
+		        if (entry2.getValue()==maxValueInMap) {
+		        		if (afines.size() <= limite){
+		        			nombre = ListaPeliculas.getListaPeliculas().getNombre(entry2.getKey());
+		        			afines.add(nombre);
+		        			//System.out.println(nombre);
+		            		it.remove();
+		        		}
+		        		else{
+		        			lleno=true;
+		        		}	
+		        }
+		    }	
+		}
+				
+			
 		return afines;
 		
 	}
@@ -156,9 +171,11 @@ public class ListaValoraciones {
 		int i = 0;
 		ArrayList<Valoracion> lista=lValoraciones.get(pActual);
 		while (i<lista.size() && !visto) {
-			if(lista.get(i).getId()== pIdUsu) {
+			//System.out.println(lista.get(i).getId() == pIdUsu);
+			if(lista.get(i).getId() == pIdUsu) {
 				visto=true;
 			}
+			i++;
 		}
 		return visto;
 		
@@ -173,12 +190,12 @@ public class ListaValoraciones {
 		for (Entry<Integer, Double> entry : correlaciones.entrySet()) {
 			double valoracion=this.obtenerValoracionPersona(entry.getKey(), idUsu);
 			//System.out.println(entry.getKey() + " " + idUsu);
-			//System.out.println(valoracion);
 			suma1=suma1+(valoracion*entry.getValue());
 			suma2=suma2+entry.getValue();
 		}
 		
 		return suma1/suma2;
+	
 		
 	}
 	
@@ -215,13 +232,17 @@ public class ListaValoraciones {
 		
 		HashMap<Integer, Double> correlaciones=new HashMap<Integer, Double>();
 		HashMap<Integer, String> lPelis=ListaPeliculas.getListaPeliculas().obtenerPelis();
+		int idPeli2;
+		double correlacion;
+		double correlacionTrans;
 		for (Entry<Integer, String> entry : lPelis.entrySet()) {
-			int idPeli2=entry.getKey();
+			idPeli2=entry.getKey();
 			//System.out.println(idPeli2);
+			
 			if(idPeli!=idPeli2 && lValoraciones.containsKey(idPeli2)) {
-					double correlacion=calcularCorrelacion(idPeli, idPeli2);
+					correlacion=calcularCorrelacion(idPeli, idPeli2);
 					//System.out.println(correlacion);
-					double correlacionTrans=transformarCorrelacion(correlacion);
+					correlacionTrans=transformarCorrelacion(correlacion);
 					correlaciones.put(idPeli2, correlacionTrans);
 					//System.out.println(correlacionTrans);
 					
@@ -238,7 +259,7 @@ public class ListaValoraciones {
 		else {
 			limite=35;
 		}
-		while (!lleno){
+		while (!lleno && !aux.isEmpty()){
 		
 			double maxValueInMap=(Collections.max(aux.values()));  // This will return max value in the Hashmap
         

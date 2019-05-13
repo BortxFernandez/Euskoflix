@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class ListaPeliculas {
 	
@@ -64,7 +65,8 @@ public class ListaPeliculas {
 		          //Pelicula unaPeli=new Pelicula(id, titulo, año);
 		          miListaPeliculas.getListaPeliculas().añadirPelicula(id, titulo);
 		          cont++;
-		          //System.out.println(datos.get(cont-1));
+		          //System.out.println(cont);
+		          
 		          
 		      }
 		      b.close();
@@ -89,6 +91,7 @@ public class ListaPeliculas {
 	}
 
 	public HashMap<Integer, String> obtenerPelis() {
+		
 		return this.lPelis;
 	}
 	
